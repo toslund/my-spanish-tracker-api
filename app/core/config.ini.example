@@ -1,0 +1,13 @@
+[GENERAL]
+
+[DROPBOX]
+token = some_token
+
+[EMAIL]
+
+[DATABASE]
+dev_db = sqlite:////some/db/dev.db
+
+[SUPERUSER]
+email = some_email
+password = some_password
