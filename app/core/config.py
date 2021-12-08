@@ -5,9 +5,10 @@ from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, v
 
 
 class Settings(BaseSettings):
-    config = configparser.ConfigParser()
-    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini')
-    config.read(config_path)
+    # For using a .ini file
+    # config = configparser.ConfigParser()
+    # config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini')
+    # config.read(config_path)
 
     #
     ## GENERAL
@@ -19,7 +20,7 @@ class Settings(BaseSettings):
     #
     ## DROPBOX
     #
-    dropbox_token = config['DROPBOX']['token']
+    dropbox_token = os.getenv('DBX-TOKEN')
 
     #
     ## SECURITY
@@ -49,7 +50,7 @@ class Settings(BaseSettings):
     #
     ## DATABASE
     #
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') if not os.getenv('DEV_MODE', 'false').lower() == 'true' else config['DATABASE']['dev_db']
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') if not os.getenv('DEV_MODE', 'false').lower() == 'true' else os.getenv('DATABASE_URL')
     #For manual setup
     # POSTGRES_SERVER: Optional[str] = None
     # POSTGRES_USER: Optional[str] = None
@@ -105,8 +106,8 @@ class Settings(BaseSettings):
     ## FIRST USER
     #
 
-    FIRST_SUPERUSER: EmailStr = config['SUPERUSER']['email']
-    FIRST_SUPERUSER_PASSWORD: str = config['SUPERUSER']['password']
+    FIRST_SUPERUSER: EmailStr = os.getenv('SUPERUSER-EMAIL')
+    FIRST_SUPERUSER_PASSWORD: str = os.getenv('SUPERUSER-PASSWORD')
 
     class Config:
         case_sensitive = True
