@@ -50,7 +50,9 @@ class Settings(BaseSettings):
     #
     ## DATABASE
     #
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') if not os.getenv('DEV_MODE', 'false').lower() == 'true' else os.getenv('DATABASE_URL')
+    # SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') if not os.getenv('DEV_MODE', 'false').lower() == 'true' else os.getenv('DATABASE_URL')
+    # Hack to fix url supplied by heroku
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1) if not os.getenv('DEV_MODE', 'false').lower() == 'true' else os.getenv('DATABASE_URL')
     #For manual setup
     # POSTGRES_SERVER: Optional[str] = None
     # POSTGRES_USER: Optional[str] = None
