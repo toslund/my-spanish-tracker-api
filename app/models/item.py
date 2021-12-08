@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 
 class Item(Base):
+    __tablename__ = 'item'
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     ## TODO change to uuid type in production
     uuid = Column(String(36), nullable=False)
