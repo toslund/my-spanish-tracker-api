@@ -35,7 +35,7 @@ def upgrade():
         Column('date_added', DateTime),
         Column('date_deprecated', DateTime),
         ## relationship
-        Column('lemma_uuid', String(36), ForeignKey('lemma.uuid')),
+        # Column('lemma_uuid', String(36), ForeignKey('lemma.uuid')),
         
     )
 
@@ -73,8 +73,9 @@ def upgrade():
         Column('rank', Integer),
         Column('region', String()),
         Column('date_added', DateTime),
-        Column('date_deprecated', DateTime), 
-        Column('vocab_uuid', String(36), ForeignKey('lemma.uuid')), 
+        Column('date_deprecated', DateTime),
+        ## relationship 
+        # Column('vocab_uuid', String(36), ForeignKey('lemma.uuid')), 
 
     )
 
@@ -97,7 +98,8 @@ def upgrade():
         Column('uuid', String(36), nullable=False),
         Column('title', String, nullable=False),
         Column('description', String),
-        Column('owner_uuid', String(36), ForeignKey('user.uuid')), 
+        ## relationship
+        # Column('owner_uuid', String(36), ForeignKey('user.uuid')), 
 
     )
 
