@@ -28,3 +28,5 @@ class Vocab(Base):
     lemma = relationship("Lemma", back_populates="vocabs")
     ## one vocab -> many definitions
     definitions = relationship("Definition", back_populates="vocab")
+    ## one vocab -> many questions
+    questions = relationship("Question", back_populates="vocab")

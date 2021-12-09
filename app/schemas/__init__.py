@@ -5,3 +5,5 @@ from .user import User, UserCreate, UserInDB, UserUpdate
 from.lemma import Lemma, LemmaCreate, LemmaInDB, LemmaDBDump
 from.vocab import VocabBase, Vocab, VocabCreate, VocabInDB, VocabDBDump
 from.definition import Definition, DefinitionCreate, DefinitionInDB, DefinitionDBDump
+from.question import Question, QuestionCreate, QuestionInDB, QuestionDBDump
+from.deck import Deck, DeckCreate, DeckInDB, DeckDBDump

@@ -16,5 +16,6 @@ class Item(Base):
     uuid = Column(String(36), nullable=False)
     title = Column(String, index=True)
     description = Column(String, index=True)
+    ## TODO change to uuid
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="items")
