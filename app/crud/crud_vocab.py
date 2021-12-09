@@ -2,15 +2,27 @@ import datetime, uuid
 from typing import List
 
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, load_only
+from sqlalchemy import text
+
 
 from app.crud.base import CRUDBase
 from app.models.vocab import Vocab
 from app.schemas.vocab import VocabCreate, VocabCreate
+from app.db.session import engine
 
 
 class CRUDVocab(CRUDBase[Vocab, VocabCreate, VocabCreate]):
-    pass
+    def get_mini(self):
+        # slow slow slow
+        # return db.query(Vocab.word).all()
+        # fast fast fast
+        vocabs = None
+        with engine.connect() as connection:
+            vocabs = connection.execute(text("SELECT word FROM vocab"))
+            vocabs = vocabs.scalars().all()
+        return vocabs
+        # return db.query(Vocab).all() #.options(load_only("id"))
 
     def create(self, db: Session, *, obj_in: VocabCreate) -> Vocab:
         db_obj = Vocab(

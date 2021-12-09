@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     #
     ## DROPBOX
     #
-    dropbox_token = os.getenv('DBX-TOKEN')
+    dropbox_token = os.getenv('DBX_TOKEN')
 
     #
     ## SECURITY
@@ -64,17 +64,17 @@ class Settings(BaseSettings):
     # default_test_db = os.path.join(dir_path, 'dev.db')
     # SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.abspath(default_test_db)}'
 
-    @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
-        if isinstance(v, str):
-            return v
-        return PostgresDsn.build(
-            scheme="postgresql",
-            user=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_SERVER"),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
-        )
+    # @validator("SQLALCHEMY_DATABASE_URI", pre=True)
+    # def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+    #     if isinstance(v, str):
+    #         return v
+    #     return PostgresDsn.build(
+    #         scheme="postgresql",
+    #         user=values.get("POSTGRES_USER"),
+    #         password=values.get("POSTGRES_PASSWORD"),
+    #         host=values.get("POSTGRES_SERVER"),
+    #         path=f"/{values.get('POSTGRES_DB') or ''}",
+    #     )
 
     #
     ## EMAIL
@@ -108,8 +108,8 @@ class Settings(BaseSettings):
     ## FIRST USER
     #
 
-    FIRST_SUPERUSER: EmailStr = os.getenv('SUPERUSER-EMAIL')
-    FIRST_SUPERUSER_PASSWORD: str = os.getenv('SUPERUSER-PASSWORD')
+    FIRST_SUPERUSER: EmailStr = os.getenv('SUPERUSER_EMAIL')
+    FIRST_SUPERUSER_PASSWORD: str = os.getenv('SUPERUSER_PASSWORD')
 
     class Config:
         case_sensitive = True

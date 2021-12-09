@@ -15,7 +15,10 @@ class VocabBase(BaseModel):
     pos: str
     note_grammar: str
     note: str
-    lemma_uuid: Optional[int] = None
+    lemma_uuid: Optional[str] = None
+
+    class Config:
+        orm_mode = True
             
 
 # Properties to receive on item creation
@@ -69,3 +72,17 @@ class VocabDBDump(VocabBase):
 
     class Config:
         orm_mode = True
+
+# # Properties for dumping to json
+# class VocabMini(VocabBase):
+#     # id: int
+#     uuid: str
+#     note_data: Optional[str]
+#     note_qaqc: Optional[str]
+#     date_added: datetime
+#     date_deprecated: Optional[datetime]
+#     lemma_uuid: Optional[str] = None
+
+#     class Config:
+#         orm_mode = True
+

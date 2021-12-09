@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas
 from app.api import deps
 
-router = APIRouter()
 
+router = APIRouter()
 
 @router.get("/", response_model=List[schemas.Vocab])
 def read_vocabs(
@@ -20,6 +20,16 @@ def read_vocabs(
     """
     vocabs = crud.vocab.get_multi(db, skip=skip, limit=limit)
 
+    return vocabs
+
+
+@router.get("/mini") # response_model=List[schemas.VocabBase], response_model_include={"word"}
+def read_vocabs_mini(
+) -> Any:
+    """
+    Retrieve vocabs words only super duper fast
+    """
+    vocabs = crud.vocab.get_mini()
     return vocabs
 
 

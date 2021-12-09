@@ -1,6 +1,7 @@
 # Secrets
 config.ini
 set_heroku_vars.sh
+set_dev_vars.sh
 
 # Dev stuff
 *.db
