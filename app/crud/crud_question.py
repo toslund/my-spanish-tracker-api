@@ -7,8 +7,8 @@ from sqlalchemy import text
 
 
 from app.crud.base import CRUDBase
-from app.models.vocab import Question
-from app.schemas.vocab import QuestionCreate, QuestionCreate
+from app.models.question import Question
+from app.schemas.question import QuestionCreate, QuestionCreate
 from app.db.session import engine
 
 
@@ -43,10 +43,10 @@ class CRUDQuestion(CRUDBase[Question, QuestionCreate, QuestionCreate]):
     
 
     # def create_with_owner(
-    #     self, db: Session, *, obj_in: QuestionCreate, owner_id: int
+    #     self, db: Session, *, obj_in: QuestionCreate, owner_uuid: int
     # ) -> Question:
     #     obj_in_data = jsonable_encoder(obj_in)
-    #     db_obj = self.model(**obj_in_data, owner_id=owner_id)
+    #     db_obj = self.model(**obj_in_data, owner_uuid=owner_uuid)
     #     db.add(db_obj)
     #     db.commit()
     #     db.refresh(db_obj)
@@ -64,4 +64,4 @@ class CRUDQuestion(CRUDBase[Question, QuestionCreate, QuestionCreate]):
         )
 
 
-vocab = CRUDQuestion(Question)
+question = CRUDQuestion(Question)

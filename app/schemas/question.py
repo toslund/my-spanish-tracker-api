@@ -1,21 +1,21 @@
 from typing import Optional
 from datetime import datetime
+from uuid import UUID
 
 
 from pydantic import BaseModel
-from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer
 
     
 # Shared properties
 class QuestionBase(BaseModel):
-    correct: Boolean
-    correctness: Integer
+    correct: bool
+    correctness: int
 
 
 # Properties to receive on question creation
 class QuestionCreate(QuestionBase):
-    deck_uuid: str
-    vocab_uuid: str
+    deck_uuid: UUID
+    vocab_uuid: UUID
 
 
 # Properties to receive on question update
@@ -26,10 +26,10 @@ class QuestionUpdate(QuestionBase):
 # Properties shared by models stored in DB
 class QuestionInDBBase(QuestionBase):
     id: int
-    uuid: str
-    deck_uuid: str
-    vocab_uuid: str
-    date_added: datetime
+    uuid: UUID
+    deck_uuid: UUID
+    vocab_uuid: UUID
+    date_added: Optional[datetime]
 
     class Config:
         orm_mode = True

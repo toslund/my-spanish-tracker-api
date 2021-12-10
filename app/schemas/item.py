@@ -1,4 +1,5 @@
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -23,7 +24,7 @@ class ItemUpdate(ItemBase):
 class ItemInDBBase(ItemBase):
     id: int
     title: str
-    owner_id: int
+    owner_uuid: UUID
 
     class Config:
         orm_mode = True

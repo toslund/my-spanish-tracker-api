@@ -3,6 +3,8 @@ from .crud_user import user
 from .crud_lemma import lemma
 from .crud_vocab import vocab
 from .crud_definition import definition
+from .crud_question import question
+from .crud_deck import deck
 
 # For a new basic set of CRUD operations you could just do
 

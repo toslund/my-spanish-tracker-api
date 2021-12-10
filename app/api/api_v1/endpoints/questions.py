@@ -66,7 +66,7 @@ def update_question(
     question = crud.question.get(db=db, id=id)
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
-    if not crud.user.is_superuser(current_user) and (question.owner_id != current_user.id):
+    if not crud.user.is_superuser(current_user) and (question.owner_uuid != current_user.uuid):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     question = crud.question.update(db=db, db_obj=question, obj_in=question_in)
     return question
@@ -85,7 +85,7 @@ def read_question(
     question = crud.question.get(db=db, id=id)
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
-    if not crud.user.is_superuser(current_user) and (question.owner_id != current_user.id):
+    if not crud.user.is_superuser(current_user) and (question.owner_uuid != current_user.uuid):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     return question
 
@@ -103,7 +103,7 @@ def delete_question(
     question = crud.question.get(db=db, id=id)
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
-    if not crud.user.is_superuser(current_user) and (question.owner_id != current_user.id):
+    if not crud.user.is_superuser(current_user) and (question.owner_uuid != current_user.uuid):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     question = crud.question.remove(db=db, id=id)
     return question

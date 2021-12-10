@@ -60,10 +60,13 @@ def dump() -> None:
     dbx = dropbox.Dropbox(settings.dropbox_token)
     print(dbx.users_get_current_account())
     db = SessionLocal()
-    lemmas, vocabs, definitions = dump_data(db)
+    lemmas, vocabs, definitions, users, questions, decks = dump_data(db)
     backup_f(lemmas, dbx, '/lemmas.json')
     backup_f(vocabs, dbx, '/vocabs.json')
     backup_f(definitions, dbx, '/definitions.json')
+    backup_f(users, dbx, '/users.json')
+    backup_f(questions, dbx, '/questions.json')
+    backup_f(decks, dbx, '/decks.json')
     print('done')
 
 

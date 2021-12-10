@@ -113,16 +113,16 @@ def create_user_open(
     return user
 
 
-@router.get("/{user_id}", response_model=schemas.User)
-def read_user_by_id(
-    user_id: int,
+@router.get("/{user_uuid}", response_model=schemas.User)
+def read_user_by_uuid(
+    user_uuid: str,
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
 ) -> Any:
     """
     Get a specific user by id.
     """
-    user = crud.user.get(db, id=user_id)
+    user = crud.user.get(db, id=user_uuid)
     if user == current_user:
         return user
     if not crud.user.is_superuser(current_user):
@@ -132,18 +132,18 @@ def read_user_by_id(
     return user
 
 
-@router.put("/{user_id}", response_model=schemas.User)
+@router.put("/{user_uuid}", response_model=schemas.User)
 def update_user(
     *,
     db: Session = Depends(deps.get_db),
-    user_id: int,
+    user_uuid: str,
     user_in: schemas.UserUpdate,
     current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
     Update a user.
     """
-    user = crud.user.get(db, id=user_id)
+    user = crud.user.get(db, id=user_uuid)
     if not user:
         raise HTTPException(
             status_code=404,

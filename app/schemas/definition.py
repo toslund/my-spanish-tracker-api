@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -25,9 +26,9 @@ class DefinitionCreate(DefinitionBase):
 # Properties shared by models stored in DB
 class DefinitionInDBBase(DefinitionBase):
     id: int
-    uuid: str
-    date_added: datetime
-    vocab_uuid: Optional[str] = None
+    uuid: UUID
+    date_added: Optional[datetime]
+    vocab_uuid: Optional[UUID] = None
     date_deprecated: Optional[datetime]
 
     class Config:
@@ -46,10 +47,10 @@ class DefinitionInDB(DefinitionInDBBase):
 # Properties for dumping to json
 class DefinitionDBDump(DefinitionBase):
     # id: int
-    uuid: str
-    date_added: datetime
+    uuid: UUID
+    date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
-    vocab_uuid: Optional[str] = None
+    vocab_uuid: Optional[UUID] = None
 
     class Config:
         orm_mode = True

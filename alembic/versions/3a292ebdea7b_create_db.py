@@ -10,7 +10,9 @@ from alembic import op
 import sqlalchemy as sa
 
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, String
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.sqltypes import Boolean
+from sqlalchemy.sql import func
 
 
 # revision identifiers, used by Alembic.
@@ -25,17 +27,17 @@ def upgrade():
         'vocab',
         Column('id', Integer, primary_key=True, nullable=False, autoincrement=True),
         ## TODO change to uuid type in production
-        Column('uuid', String(36), nullable=False, unique=True),
+        Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
         Column('word', String(50), nullable=False),
         Column('pos', String(10)),
         Column('note_data', String()),
         Column('note_qaqc', String()),
         Column('note_grammar', String()),
         Column('note', String()),
-        Column('date_added', DateTime),
+        Column('date_added', DateTime, nullable=False, server_default=func.now()),
         Column('date_deprecated', DateTime),
         ## relationship
-        # Column('lemma_uuid', String(36), ForeignKey('lemma.uuid')),
+        # Column('lemma_uuid', UUID(as_uuid=True), ForeignKey('lemma.uuid')),
         
     )
 
@@ -43,7 +45,7 @@ def upgrade():
         'lemma',
         Column('id', Integer, primary_key=True, nullable=False, autoincrement=True),
         ## TODO change to uuid type in production
-        Column('uuid', String(36), nullable=False, unique=True),
+        Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
         Column('lemma', String(50), nullable=False),
         Column('pos', String(10)),
         Column('rank', Integer, unique=True),
@@ -58,7 +60,7 @@ def upgrade():
         Column('note_qaqc', String()),
         Column('note_grammar', String()),
         Column('note', String()),
-        Column('date_added', DateTime),
+        Column('date_added', DateTime, nullable=False, server_default=func.now()),
         Column('date_deprecated', DateTime),
     
     )
@@ -67,15 +69,15 @@ def upgrade():
         'definition',
         Column('id', Integer, primary_key=True, nullable=False, autoincrement=True),
         ## TODO change to uuid type in production
-        Column('uuid', String(36), nullable=False),
+        Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
         Column('definition', String(), nullable=False),
         Column('note', String),
         Column('rank', Integer),
         Column('region', String()),
-        Column('date_added', DateTime),
+        Column('date_added', DateTime, nullable=False, server_default=func.now()),
         Column('date_deprecated', DateTime),
         ## relationship 
-        # Column('vocab_uuid', String(36), ForeignKey('lemma.uuid')), 
+        # Column('vocab_uuid', UUID(as_uuid=True), ForeignKey('lemma.uuid')), 
 
     )
 
@@ -83,23 +85,24 @@ def upgrade():
         'user',
         Column('id', Integer, primary_key=True, nullable=False, autoincrement=True),
         ## TODO change to uuid type in production
-        Column('uuid', String(36), nullable=False),
-        Column('full_name', String(36)),
-        Column('email', String(), unique=True),
+        Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
+        Column('full_name', String),
+        Column('email', String, unique=True),
         Column('hashed_password', String, nullable=False),
         Column('is_active', Boolean(), default=True),
         Column('is_superuser', Boolean(), default=False),
+        Column('date_added', DateTime, nullable=False, server_default=func.now()),
     )
 
     op.create_table(
         'item',
         Column('id', Integer, primary_key=True, nullable=False, autoincrement=True),
         ## TODO change to uuid type in production
-        Column('uuid', String(36), nullable=False),
+        Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
         Column('title', String, nullable=False),
         Column('description', String),
         ## relationship
-        # Column('owner_uuid', String(36), ForeignKey('user.uuid')), 
+        # Column('owner_uuid', UUID(as_uuid=True), ForeignKey('user.uuid')), 
 
     )
 

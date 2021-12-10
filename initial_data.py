@@ -1,8 +1,8 @@
-import logging, json
+import logging, json, sys
 import dropbox
 
 from app.core.config import settings
-from app.db.db_util import init_db, populate_seed_data, populate_seed_data_objects
+from app.db.db_util import populate_seed_data, populate_seed_data_objects
 from app.db.session import SessionLocal
 from app.schemas import definition
 
@@ -26,22 +26,41 @@ def retrieve_data(dbx, file_path):
     return json.loads(data)
 
 
-def init() -> None:
+def init(kw_dict) -> None:
     dbx = dropbox.Dropbox(settings.dropbox_token)
     db = SessionLocal()
     lemmas = retrieve_data(dbx, '/lemmas.json')
     vocabs = retrieve_data(dbx, '/vocabs.json')
     definitions = retrieve_data(dbx, '/definitions.json')
-    init_db(db)
-    populate_seed_data_objects(db, lemmas=lemmas, vocabs=vocabs, definitions=definitions)
+    users = retrieve_data(dbx, '/users.json')
+    questions = retrieve_data(dbx, '/questions.json')
+    decks = retrieve_data(dbx, '/decks.json')
+    populate_seed_data_objects(
+        db,
+        lemmas=lemmas,
+        vocabs=vocabs,
+        definitions=definitions,
+        users=users,
+        questions=questions,
+        decks=decks,
+        over_ride_dates=kw_dict.get('over_ride_dates') == 'true'
+    )
     # populate_seed_data(db)
 
 
-def main() -> None:
+def main(kw_dict) -> None:
     logger.info("Creating initial data")
-    init()
+    init(kw_dict)
     logger.info("Initial data created")
 
 
 if __name__ == "__main__":
-    main()
+    kw_dict = {}
+    for arg in sys.argv[1:]:
+        if '=' in arg:
+            sep = arg.find('=')
+            key, value = arg[:sep], arg[sep + 1:]
+            kw_dict[key] = value
+
+    main(kw_dict)
+

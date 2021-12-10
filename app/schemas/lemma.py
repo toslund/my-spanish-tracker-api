@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -34,8 +35,8 @@ class LemmaCreate(LemmaBase):
 # Properties shared by models stored in DB
 class LemmaInDBBase(LemmaBase):
     id: int
-    uuid: str
-    date_added: datetime
+    uuid: UUID
+    date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
 
     class Config:
@@ -45,7 +46,7 @@ class LemmaInDBBase(LemmaBase):
 # Properties to return to client
 class Lemma(LemmaBase):
     id: int
-    date_added: datetime
+    date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
 
     class Config:
@@ -59,7 +60,7 @@ class LemmaInDB(LemmaInDBBase):
 # Properties for dumping to json
 class LemmaDBDump(LemmaBase):
     # id: int
-    uuid: str
+    uuid: UUID
     # lemma: str
     # pos: str
     # rank: Optional[int] = 9999999
@@ -75,7 +76,7 @@ class LemmaDBDump(LemmaBase):
     # note_grammar: str
     # note: str
 
-    date_added: datetime
+    date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
 
     class Config:

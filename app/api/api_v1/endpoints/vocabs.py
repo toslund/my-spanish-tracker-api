@@ -43,7 +43,7 @@ def read_vocabs_mini(
 #     """
 #     Create new item.
 #     """
-#     item = crud.item.create_with_owner(db=db, obj_in=item_in, owner_id=current_user.id)
+#     item = crud.item.create_with_owner(db=db, obj_in=item_in, owner_uuid=current_user.uuid)
 #     return item
 
 
@@ -61,7 +61,7 @@ def read_vocabs_mini(
 #     item = crud.item.get(db=db, id=id)
 #     if not item:
 #         raise HTTPException(status_code=404, detail="Item not found")
-#     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
+#     if not crud.user.is_superuser(current_user) and (item.owner_uuid != current_user.uuid):
 #         raise HTTPException(status_code=400, detail="Not enough permissions")
 #     item = crud.item.update(db=db, db_obj=item, obj_in=item_in)
 #     return item
@@ -80,7 +80,7 @@ def read_vocabs_mini(
 #     item = crud.item.get(db=db, id=id)
 #     if not item:
 #         raise HTTPException(status_code=404, detail="Item not found")
-#     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
+#     if not crud.user.is_superuser(current_user) and (item.owner_uuid != current_user.uuid):
 #         raise HTTPException(status_code=400, detail="Not enough permissions")
 #     return item
 
@@ -98,7 +98,7 @@ def read_vocabs_mini(
 #     item = crud.item.get(db=db, id=id)
 #     if not item:
 #         raise HTTPException(status_code=404, detail="Item not found")
-#     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
+#     if not crud.user.is_superuser(current_user) and (item.owner_uuid != current_user.uuid):
 #         raise HTTPException(status_code=400, detail="Not enough permissions")
 #     item = crud.item.remove(db=db, id=id)
 #     return item

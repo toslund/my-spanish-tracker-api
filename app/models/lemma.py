@@ -1,7 +1,9 @@
 # from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from app.db.base_class import Base
 
@@ -12,7 +14,7 @@ class Lemma(Base):
     __tablename__ = 'lemma'
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     ## TODO change to uuid type in production
-    uuid = Column(String(36), nullable=False, unique=True)
+    uuid = Column(UUID(as_uuid=True), nullable=False, unique=True)
     lemma = Column(String(50), nullable=False)
     pos = Column(String(10), nullable=True)
     rank = Column(Integer, nullable=True)
@@ -28,7 +30,7 @@ class Lemma(Base):
     note_grammar = Column(String(), nullable=True)
     note = Column(String(), nullable=True)
     
-    date_added = Column(DateTime, nullable=True)
+    date_added = Column(DateTime, nullable=False, server_default=func.now())
     date_deprecated = Column(DateTime, nullable=True)
     ## relationship
     ## one lemma -> many vocabs

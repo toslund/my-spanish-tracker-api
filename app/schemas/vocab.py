@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
+from uuid import UUID
 
 from pydantic import BaseModel
 # from app.models.definition import Definition
@@ -15,7 +16,7 @@ class VocabBase(BaseModel):
     pos: str
     note_grammar: str
     note: str
-    lemma_uuid: Optional[str] = None
+    lemma_uuid: Optional[UUID] = None
 
     class Config:
         orm_mode = True
@@ -35,8 +36,8 @@ class VocabCreate(VocabBase):
 # Properties shared by models stored in DB
 class VocabInDBBase(VocabBase):
     id: int
-    uuid: str
-    date_added: datetime
+    uuid: UUID
+    date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
     lemma: Optional[Lemma] = None
 
@@ -46,8 +47,8 @@ class VocabInDBBase(VocabBase):
 
 # Properties to return to client
 class Vocab(BaseModel):
-    uuid: str
-    date_added: datetime
+    uuid: UUID
+    date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
     lemma: Optional[Lemma] = None
     definitions: List[Definition]
@@ -63,12 +64,12 @@ class VocabInDB(VocabInDBBase):
 # Properties for dumping to json
 class VocabDBDump(VocabBase):
     # id: int
-    uuid: str
+    uuid: UUID
     note_data: Optional[str]
     note_qaqc: Optional[str]
-    date_added: datetime
+    date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
-    lemma_uuid: Optional[str] = None
+    lemma_uuid: Optional[UUID] = None
 
     class Config:
         orm_mode = True

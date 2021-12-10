@@ -18,7 +18,6 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         print(User)
         db_obj = User(
             ## TODO change uuid type in production
-            uuid=str(uuid.uuid4()),
             email=obj_in.email,
             hashed_password=get_password_hash(obj_in.password),
             full_name=obj_in.full_name,

@@ -1,10 +1,9 @@
 from typing import Optional
 from datetime import datetime
+from uuid import UUID
 
 
 from pydantic import BaseModel
-from sqlalchemy.sql.sqltypes import DateTime
-
     
 # Shared properties
 class DeckBase(BaseModel):
@@ -13,7 +12,7 @@ class DeckBase(BaseModel):
 
 # Properties to receive on deck creation
 class DeckCreate(DeckBase):
-    owner_uuid: Optional[str] = None
+    owner_uuid: Optional[UUID] = None
 
 
 # Properties to receive on deck update
@@ -24,9 +23,9 @@ class DeckUpdate(DeckBase):
 # Properties shared by models stored in DB
 class DeckInDBBase(DeckBase):
     id: int
-    uuid: str
-    owner_uuid: Optional[str] = None
-    date_added: datetime
+    uuid: UUID
+    owner_uuid: Optional[UUID] = None
+    date_added: Optional[datetime]
 
     class Config:
         orm_mode = True

@@ -84,6 +84,8 @@ def run_migrations_online():
     print(settings.SQLALCHEMY_DATABASE_URI)
     print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
     configuration["sqlalchemy.url"] = settings.SQLALCHEMY_DATABASE_URI
+    # configuration["echo"] = 'True'
+    print(configuration)
     
     connectable = engine_from_config(
         configuration,
@@ -93,7 +95,7 @@ def run_migrations_online():
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, target_metadata=target_metadata, render_as_batch=True
         )
 
         with context.begin_transaction():
