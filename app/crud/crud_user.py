@@ -14,8 +14,6 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return db.query(User).filter(User.email == email).first()
 
     def create(self, db: Session, *, obj_in: UserCreate) -> User:
-        print('*******************************************')
-        print(User)
         db_obj = User(
             ## TODO change uuid type in production
             email=obj_in.email,

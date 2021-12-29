@@ -29,7 +29,7 @@ def upgrade():
         ## TODO change to uuid type in production
         Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
         Column('word', String(50), nullable=False),
-        Column('pos', String(10)),
+        Column('pos', String(50)),
         Column('note_data', String()),
         Column('note_qaqc', String()),
         Column('note_grammar', String()),
@@ -46,9 +46,8 @@ def upgrade():
         Column('id', Integer, primary_key=True, nullable=False, autoincrement=True),
         ## TODO change to uuid type in production
         Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
-        Column('lemma', String(50), nullable=False),
-        Column('pos', String(10)),
-        Column('rank', Integer, unique=True),
+        Column('word', String(50), nullable=False),
+        Column('pos', String(50)),
 
         Column('total_count', Integer),
         Column('academic_count', Integer),
@@ -70,7 +69,7 @@ def upgrade():
         Column('id', Integer, primary_key=True, nullable=False, autoincrement=True),
         ## TODO change to uuid type in production
         Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
-        Column('definition', String(), nullable=False),
+        Column('content', String(), nullable=False),
         Column('note', String),
         Column('rank', Integer),
         Column('region', String()),
@@ -101,6 +100,7 @@ def upgrade():
         Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
         Column('title', String, nullable=False),
         Column('description', String),
+        Column('date_added', DateTime, nullable=False, server_default=func.now()),
         ## relationship
         # Column('owner_uuid', UUID(as_uuid=True), ForeignKey('user.uuid')), 
 

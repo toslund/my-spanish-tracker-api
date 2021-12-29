@@ -8,6 +8,11 @@ set_dev_vars.sh
 *.private
 json_data
 util_scripts
+scratch.py
+data_validity_checks.py
+all_data_edit_copy.json
+app_test.py
+users.csv
 
 __pycache__
 *.py[cod]

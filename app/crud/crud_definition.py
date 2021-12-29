@@ -1,12 +1,13 @@
 import datetime, uuid
-from typing import List
+from typing import List, Optional
+from uuid import UUID
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
 from app.models.definition import Definition
-from app.schemas.definition import DefinitionCreate, DefinitionCreate
+from app.schemas.definition import DefinitionCreate, DefinitionCreate, DefinitionSimplified
 
 
 class CRUDDefinition(CRUDBase[Definition, DefinitionCreate, DefinitionCreate]):
@@ -15,9 +16,8 @@ class CRUDDefinition(CRUDBase[Definition, DefinitionCreate, DefinitionCreate]):
     def create(self, db: Session, *, obj_in: DefinitionCreate) -> Definition:
         db_obj = Definition(
             uuid=uuid.uuid4,
-            definition=obj_in.definition,
+            content=obj_in.content,
             region=obj_in.region,
-            rank=obj_in.rank,
             lemma_uuid=None,
             note=obj_in.note,
             # date_added = datetime.datetime.now,
@@ -30,24 +30,8 @@ class CRUDDefinition(CRUDBase[Definition, DefinitionCreate, DefinitionCreate]):
 
         return db_obj
     
-    ## TODO change obj_in type to specific schema to take advantage of built in
-    def create_from_dict(self, db: Session, *, dict_in: dict) -> Definition:
-        db_obj = Definition(
-            uuid=uuid.UUID(dict_in['uuid']),
-            definition=dict_in['definition'],
-            region=dict_in['region'],
-            rank=dict_in['rank'],
-            vocab_uuid=dict_in['vocab_uuid'],
-            note=dict_in['note'],
-            date_added = datetime.datetime.fromtimestamp(dict_in['date_added']),
-            date_deprecated= dict_in['date_deprecated'],
-        )
-
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
-
-        return db_obj
+    def get_multi_by_vocab_uuids(self, db: Session, uuids: List[UUID]) -> List[Optional[DefinitionSimplified]]:
+        return db.query(self.model).filter(self.model.vocab_uuid.in_(uuids)).all()
 
     # def create_with_owner(
     #     self, db: Session, *, obj_in: ItemCreate, owner_uuid: int

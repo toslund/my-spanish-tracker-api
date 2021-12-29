@@ -16,7 +16,7 @@ class Definition(Base):
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     ## TODO change to uuid type in production
     uuid = Column(UUID(as_uuid=True), nullable=False, unique=True)
-    definition = Column(String(), nullable=False)
+    content = Column(String(), nullable=False)
     rank = Column(Integer, nullable=True)
     region = Column(String(), nullable=True)
     note = Column(String(), nullable=True)

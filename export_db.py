@@ -37,7 +37,7 @@ def backup_f(data_dict, dbx, backup_path):
     print("Uploading " + os.path.basename(backup_path) + " to Dropbox as " + backup_path + "...")
     try:
         with io.StringIO() as stream:
-            json.dump(data_dict, stream, indent=4) # Ident param is optional
+            json.dump(data_dict, stream, ensure_ascii=False) # Ident param is optional
             stream.seek(0)
             dbx.files_upload(stream.read().encode(), backup_path, mode=WriteMode('overwrite'))
 

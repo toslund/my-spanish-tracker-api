@@ -13,6 +13,7 @@ class ItemBase(BaseModel):
 # Properties to receive on item creation
 class ItemCreate(ItemBase):
     title: str
+    uuid: UUID
 
 
 # Properties to receive on item update
@@ -31,10 +32,22 @@ class ItemInDBBase(ItemBase):
 
 
 # Properties to return to client
-class Item(ItemInDBBase):
-    pass
+class Item(ItemBase):
+    uuid: UUID
+    owner_uuid: UUID
+
+    class Config:
+        orm_mode = True
 
 
 # Properties properties stored in DB
 class ItemInDB(ItemInDBBase):
     pass
+
+# Properties for db dump
+class ItemDBDump(ItemBase):
+    uuid: UUID
+    owner_uuid: UUID
+
+    class Config:
+        orm_mode = True

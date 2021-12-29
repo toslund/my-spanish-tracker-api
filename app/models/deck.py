@@ -18,7 +18,7 @@ class Deck(Base):
     date_added = Column(DateTime, nullable=False, server_default=func.now())
     ## TODO change to uuid type in production
     ## relationship
-    owner_uuid = Column(UUID(as_uuid=True), ForeignKey("user.id"))
+    owner_uuid = Column(UUID(as_uuid=True), ForeignKey("user.uuid"))
     owner = relationship("User", back_populates="decks")
 
     questions = relationship("Question", back_populates="deck")

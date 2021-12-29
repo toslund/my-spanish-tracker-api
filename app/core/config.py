@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "spanish-vocab"
     API_V1_STR: str = "/api/v1"
     USERS_OPEN_REGISTRATION: bool = False
+    DECKS_OPEN_POST: bool = True
+    OPEN_POST_KEY = os.getenv('OPEN_POST_KEY', secrets.token_urlsafe(32))
 
     #
     ## DROPBOX
@@ -25,9 +27,11 @@ class Settings(BaseSettings):
     #
     ## SECURITY
     #
-    SECRET_KEY: str = secrets.token_urlsafe(32)
+    SECRET_KEY: str = os.getenv('SECRET_KEY')
     # 60 minutes * 24 hours * 8 days = 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+    POST_QUESTION_TOKEN_EXPIRES_SECONDS: int = 60 * 60
+    POST_QUESTION_TOKEN_NBF_SECONDS: int = os.getenv('NBF_SECONDS')
 
     #
     ## SERVER

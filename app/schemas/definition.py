@@ -6,16 +6,20 @@ from pydantic import BaseModel
 
 # Shared properties
 class DefinitionBase(BaseModel):
-    definition: str
-    note: str
-    rank: Optional[int] = 9999999
+    content: str
+    rank: int
     region: Optional[str] = None
-    vocab_uuid: Optional[int] = None
-            
+    note: Optional[str]
+
+# Shared properties
+class DefinitionSimplified(DefinitionBase):
+
+    class Config:
+        orm_mode = True
 
 # Properties to receive on item creation
 class DefinitionCreate(DefinitionBase):
-    pass
+    vocab_uuid: UUID
 
 
 # Properties to receive on item update

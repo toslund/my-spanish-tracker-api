@@ -23,5 +23,6 @@ class User(Base):
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
     date_added = Column(DateTime, nullable=False, server_default=func.now())
-    items = relationship("Item", back_populates="owner")
-    decks = relationship("Deck", back_populates="owner")
+    items = relationship("Item", back_populates="owner", cascade="all, delete")
+    decks = relationship("Deck", back_populates="owner", cascade="all, delete")
+    questions = relationship("Question", back_populates="owner", cascade="all, delete")

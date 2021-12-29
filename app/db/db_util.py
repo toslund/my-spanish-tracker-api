@@ -28,6 +28,26 @@ def init_superuser(db: Session) -> None:
         )
         user = crud.user.create(db, obj_in=user_in)  # noqa: F841
 
+def create_user(db: Session, fullname, email, password, uuid) -> None:
+    # Tables should be created with Alembic migrations
+    # But if you don't want to use migrations, create
+    # the tables un-commenting the next line
+    # Base.metadata.create_all(bind=engine)
+
+    user = crud.user.get_by_email(db, email=email)
+    created = False
+    if not user:
+        user_in = schemas.UserCreate(
+            full_name=fullname,
+            email=email,
+            password=password,
+            is_superuser=False,
+            uuid=uuid
+        )
+        user = crud.user.create(db, obj_in=user_in)  # noqa: F841
+        created = True
+    return created, user
+
 def dump_data(db: Session):
     print('dumping lemmas')
     lemmas = crud.lemma.get_multi(db, limit = None)
@@ -63,9 +83,8 @@ def populate_seed_data_objects(db: Session, lemmas, vocabs, definitions, users, 
     for lemma in lemmas:
         lemma_in = schemas.LemmaDBDump(
             uuid=lemma['uuid'],
-            lemma=lemma['lemma'],
+            word=lemma['word'],
             pos=lemma['pos'],
-            rank=lemma['rank'],
             total_count=lemma['total_count'],
             academic_count=lemma['academic_count'],
             news_count=lemma['news_count'],
@@ -105,7 +124,7 @@ def populate_seed_data_objects(db: Session, lemmas, vocabs, definitions, users, 
     for definition in definitions:
         definition_in = schemas.DefinitionDBDump(
             uuid=definition['uuid'],
-            definition=definition['definition'],
+            content=definition['content'],
             region=definition['region'],
             rank=definition['rank'],
             note=definition['note'],
@@ -114,6 +133,7 @@ def populate_seed_data_objects(db: Session, lemmas, vocabs, definitions, users, 
             date_deprecated=None if not definition['date_deprecated'] else datetime.fromisoformat(definition['date_deprecated'])
         )
         definition_models.append(definition_in)
+    print(f'number of definition_models: {len(definition_models)}')
     crud.definition.batch_create(db, objs_in=definition_models)
 
     print('adding users')
@@ -137,9 +157,12 @@ def populate_seed_data_objects(db: Session, lemmas, vocabs, definitions, users, 
         question_in = schemas.QuestionDBDump(
             uuid=question['uuid'],
             correct=question['correct'],
+            recognize=question['recognize'],
             correctness=question['correctness'],
+            familiarity=question['familiarity'],
             deck_uuid=question['deck_uuid'],
             vocab_uuid=question['vocab_uuid'],
+            owner_uuid=question['owner_uuid'],
             date_added=None if over_ride_dates else datetime.fromisoformat(question['date_added']),
         )
         question_models.append(question_in)
@@ -155,31 +178,3 @@ def populate_seed_data_objects(db: Session, lemmas, vocabs, definitions, users, 
         )
         deck_models.append(deck_in)
     crud.deck.batch_create(db, objs_in=deck_models)
-
-
-def populate_seed_data(db: Session) -> None:
-    dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    
-    lemma_json = os.path.join(dir_path, 'json_data', 'lemmas.json')
-    json_lemma_data = os.path.abspath(lemma_json)
-    with open(json_lemma_data, 'r') as file:
-        print('adding lemmas')
-        lemma_data = json.load(file)
-        for x in lemma_data.values():
-            crud.lemma.create_from_dict(db, dict_in = x)
-
-    vocab_json = os.path.join(dir_path, 'json_data', 'vocab.json')
-    json_vocab_data = os.path.abspath(vocab_json)
-    with open(json_vocab_data, 'r') as file:
-        print('adding vocab')
-        vocab_data = json.load(file)
-        for x in vocab_data.values():
-            crud.vocab.create_from_dict(db, dict_in = x)
-
-    definition_json = os.path.join(dir_path, 'json_data', 'definitions.json')
-    json_definition_data = os.path.abspath(definition_json)
-    with open(json_definition_data, 'r') as file:
-        print('adding defs')
-        definition_data = json.load(file)
-        for x in definition_data.values():
-            crud.definition.create_from_dict(db, dict_in = x)

@@ -2,7 +2,7 @@ import logging, json, sys
 import dropbox
 
 from app.core.config import settings
-from app.db.db_util import populate_seed_data, populate_seed_data_objects
+from app.db.db_util import populate_seed_data_objects
 from app.db.session import SessionLocal
 from app.schemas import definition
 
@@ -45,7 +45,6 @@ def init(kw_dict) -> None:
         decks=decks,
         over_ride_dates=kw_dict.get('over_ride_dates') == 'true'
     )
-    # populate_seed_data(db)
 
 
 def main(kw_dict) -> None:

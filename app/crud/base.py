@@ -1,5 +1,5 @@
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
-
+from uuid import UUID
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -29,13 +29,18 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def get_by_uuid(self, db: Session, uuid: Any) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.uuid == uuid).first()
 
+    def get_multi_by_uuids(self, db: Session, uuids: List[Any]) -> List[Optional[ModelType]]:
+        return db.query(self.model).filter(self.model.uuid.in_(uuids)).all()
+
     def get_multi(
         self, db: Session, *, skip: int = 0, limit: int = 100
     ) -> List[ModelType]:
         return db.query(self.model).offset(skip).limit(limit).all()
 
-    def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
-        obj_in_data = jsonable_encoder(obj_in)
+    def create(self, db: Session, *, obj_in: CreateSchemaType, exclude={}) -> ModelType:
+
+        # obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data = obj_in.dict(exclude=exclude)
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.commit()
@@ -71,8 +76,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.refresh(db_obj)
         return db_obj
 
-    def remove(self, db: Session, *, id: int) -> ModelType:
-        obj = db.query(self.model).get(id)
+    def remove(self, db: Session, *, uuid: int) -> ModelType:
+        obj = db.query(self.model).filter(self.model.uuid == uuid).first()
         db.delete(obj)
         db.commit()
         return obj

@@ -80,9 +80,6 @@ def run_migrations_online():
 
     """
     configuration = config.get_section(config.config_ini_section)
-    print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-    print(settings.SQLALCHEMY_DATABASE_URI)
-    print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
     configuration["sqlalchemy.url"] = settings.SQLALCHEMY_DATABASE_URI
     # configuration["echo"] = 'True'
     print(configuration)

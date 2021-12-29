@@ -27,8 +27,10 @@ def upgrade():
         Column('id', Integer, primary_key=True, nullable=False, autoincrement=True),
         ## TODO change to uuid type in production
         Column('uuid', UUID(as_uuid=True), nullable=False, unique=True),
-        Column('correct', Boolean),
+        Column('correct', Boolean, nullable=False),
+        Column('recognize', Boolean),
         Column('correctness', Integer),
+        Column('familiarity', Integer),
         Column('date_added', DateTime, nullable=False, server_default=func.now()),
 
         ## relationship

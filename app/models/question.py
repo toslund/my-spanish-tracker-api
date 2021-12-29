@@ -17,7 +17,9 @@ class Question(Base):
     ## TODO change to uuid type in production
     uuid = Column(UUID(as_uuid=True), nullable=False, unique=True)
     correct = Column(Boolean, nullable=False)
-    correctness = Column(Integer, nullable=True)
+    recognize = Column(Boolean, nullable=True)
+    correctness = Column(Integer)
+    familiarity = Column(Integer)
     date_added = Column(DateTime, nullable=False, server_default=func.now())
     ## TODO change to uuid type in production
     ## relationship
@@ -25,7 +27,10 @@ class Question(Base):
     deck = relationship("Deck", back_populates="questions")
 
     vocab_uuid = Column(UUID(as_uuid=True), ForeignKey("vocab.uuid"))
-    vocab = relationship("Vocab", back_populates="questions")
+    vocab = relationship("Vocab", back_populates="questions", lazy="joined")
+
+    owner_uuid = Column(UUID(as_uuid=True), ForeignKey("user.uuid"))
+    owner = relationship("User", back_populates="questions")
     
 
     

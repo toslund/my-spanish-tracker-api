@@ -1,7 +1,3 @@
-from typing import Optional
-from .prediction_service import Assesment
-import random
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -25,22 +21,6 @@ if settings.BACKEND_CORS_ORIGINS:
 
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
-
-
-#TODO migrate these routes to new router in new project structure
-# @app.get("/vocab")
-# def read_vocab():
-#     return corpus.random_vocab()
-
-# @app.get("/vocab/assesment")
-# def read_item():
-#     print(random.randint(1, 100))
-#     assesment = Assesment.from_corpus(corpus)
-#     assesment.generate_questions()
-#     print(assesment)
-#     print(assesment.questions[0].word)
-#     return assesment.questions
-
 
 
 

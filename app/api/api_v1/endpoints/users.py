@@ -1,4 +1,5 @@
 from typing import Any, List
+from uuid import UUID
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -100,7 +101,7 @@ def create_user_open(
     if not settings.USERS_OPEN_REGISTRATION:
         raise HTTPException(
             status_code=403,
-            detail="Open user registration is forbidden on this server",
+            detail="Open user registration is forbidden at this time",
         )
     user = crud.user.get_by_email(db, email=email)
     if user:
@@ -122,7 +123,7 @@ def read_user_by_uuid(
     """
     Get a specific user by id.
     """
-    user = crud.user.get(db, id=user_uuid)
+    user = crud.user.get_by_uuid(db, uuid=user_uuid)
     if user == current_user:
         return user
     if not crud.user.is_superuser(current_user):
@@ -132,22 +133,52 @@ def read_user_by_uuid(
     return user
 
 
-@router.put("/{user_uuid}", response_model=schemas.User)
-def update_user(
+# @router.put("/{user_uuid}", response_model=schemas.User)
+# def update_user(
+#     *,
+#     db: Session = Depends(deps.get_db),
+#     user_uuid: str,
+#     user_in: schemas.UserUpdate,
+#     current_user: models.User = Depends(deps.get_current_active_superuser),
+# ) -> Any:
+#     """
+#     Update a user.
+#     """
+#     user = crud.user.get(db, id=user_uuid)
+#     if not user:
+#         raise HTTPException(
+#             status_code=404,
+#             detail="The user with this username does not exist in the system",
+#         )
+#     user = crud.user.update(db, db_obj=user, obj_in=user_in)
+#     return user
+
+## TODO PRIORITY
+## create seperate DELETE route for regular users
+# @router.delete("/me", response_model=schemas.UserBase)
+# def delete_lemma(
+#     *,
+#     db: Session = Depends(deps.get_db),
+#     current_user: models.User = Depends(deps.get_current_active_user),
+# ) -> Any:
+
+@router.delete("/{uuid}", response_model=schemas.UserBase)
+def delete_lemma(
     *,
     db: Session = Depends(deps.get_db),
-    user_uuid: str,
-    user_in: schemas.UserUpdate,
+    uuid: UUID,
     current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
-    Update a user.
+    Delete a user.
     """
-    user = crud.user.get(db, id=user_uuid)
+    
+    user = crud.user.get_by_uuid(db=db, uuid=uuid)
     if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="The user with this username does not exist in the system",
-        )
-    user = crud.user.update(db, db_obj=user, obj_in=user_in)
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.is_superuser:
+        ## manually delete superusers via cli
+        raise HTTPException(status_code=400, detail="Not enough permissions")
+    user = crud.user.remove(db=db, uuid=uuid)
     return user
+

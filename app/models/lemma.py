@@ -15,9 +15,8 @@ class Lemma(Base):
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     ## TODO change to uuid type in production
     uuid = Column(UUID(as_uuid=True), nullable=False, unique=True)
-    lemma = Column(String(50), nullable=False)
+    word = Column(String(50), nullable=False)
     pos = Column(String(10), nullable=True)
-    rank = Column(Integer, nullable=True)
 
     total_count = Column(Integer, nullable=True)
     academic_count = Column(Integer, nullable=True)
@@ -34,5 +33,5 @@ class Lemma(Base):
     date_deprecated = Column(DateTime, nullable=True)
     ## relationship
     ## one lemma -> many vocabs
-    vocabs = relationship("Vocab", back_populates="lemma")
+    vocabs = relationship("Vocab", back_populates="lemma", cascade="all, delete")
 

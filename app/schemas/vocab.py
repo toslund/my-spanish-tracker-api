@@ -5,28 +5,35 @@ from uuid import UUID
 from pydantic import BaseModel
 # from app.models.definition import Definition
 
-from .definition import Definition
+from .definition import Definition, DefinitionSimplified
 
-from .lemma import Lemma
+from .lemma import Lemma, LemmaSimplified
 
 
 # Shared properties
 class VocabBase(BaseModel):
+    uuid: UUID
     word: str
     pos: str
-    note_grammar: str
     note: str
-    lemma_uuid: Optional[UUID] = None
 
     class Config:
-        orm_mode = True
-            
+        orm_mode = True        
 
 # Properties to receive on item creation
 class VocabCreate(VocabBase):
+    lemma_uuid: UUID
     note_data: Optional[str]
     note_qaqc: Optional[str]
+    note_grammar: Optional[str]
 
+class VocabSimplified(VocabBase):
+    rank: Optional[int]
+    # lemma: LemmaSimplified
+    definitions: List[DefinitionSimplified]
+
+class VocabDefs(VocabBase):
+    definitions: List[DefinitionSimplified]
 
 # Properties to receive on item update
 # class VocabUpdate(ItemBase):
@@ -36,7 +43,6 @@ class VocabCreate(VocabBase):
 # Properties shared by models stored in DB
 class VocabInDBBase(VocabBase):
     id: int
-    uuid: UUID
     date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
     lemma: Optional[Lemma] = None
@@ -50,6 +56,9 @@ class Vocab(BaseModel):
     uuid: UUID
     date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
+    note_data: Optional[str]
+    note_qaqc: Optional[str]
+    note_grammar: Optional[str]
     lemma: Optional[Lemma] = None
     definitions: List[Definition]
 
@@ -67,6 +76,7 @@ class VocabDBDump(VocabBase):
     uuid: UUID
     note_data: Optional[str]
     note_qaqc: Optional[str]
+    note_grammar: Optional[str]
     date_added: Optional[datetime]
     date_deprecated: Optional[datetime]
     lemma_uuid: Optional[UUID] = None

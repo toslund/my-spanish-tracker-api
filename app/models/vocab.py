@@ -29,6 +29,6 @@ class Vocab(Base):
     lemma_uuid = Column(Integer, ForeignKey('lemma.uuid'), primary_key=True) ## FOREIGN KEY
     lemma = relationship("Lemma", back_populates="vocabs")
     ## one vocab -> many definitions
-    definitions = relationship("Definition", back_populates="vocab")
+    definitions = relationship("Definition", back_populates="vocab", lazy='joined', cascade="all, delete")
     ## one vocab -> many questions
     questions = relationship("Question", back_populates="vocab")
