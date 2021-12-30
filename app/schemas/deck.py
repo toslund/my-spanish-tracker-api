@@ -53,7 +53,7 @@ class Deck(DeckBase):
 class DeckInDB(DeckInDBBase):
     pass
 
-class DeckDBDump(DeckInDBBase):
+class DeckDBDump(DeckBase):
     owner_uuid: Union[UUID, None]
     date_added: Optional[datetime]
     
