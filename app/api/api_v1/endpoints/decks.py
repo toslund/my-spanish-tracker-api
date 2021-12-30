@@ -119,12 +119,12 @@ def generate_deck_assessment(
     Get deck by ID.
     """
     deck = crud.deck.get_by_uuid(db=db, uuid=uuid)
+    if not deck:
+        raise HTTPException(status_code=404, detail="Deck not found")
     ## Decks with owners should only be seen by owners and superusers
     if deck.owner_uuid:
         if (current_user and getattr(current_user, 'uuid', None) != deck.owner_uuid) or (not current_user.is_superuser or current_user.uuid != deck.owner_uuid):
             raise HTTPException(status_code=400, detail="Not enough permissions") 
-    if not deck:
-        raise HTTPException(status_code=404, detail="Deck not found")
     all_ranks = crud.vocab.get_ranks(db)
     deck_assessment = Assessment(deck.questions, all_ranks)
     assessment_payload = {

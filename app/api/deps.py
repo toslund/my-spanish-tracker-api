@@ -41,7 +41,9 @@ def get_user_or_none(
         return None
     user = crud.user.get_by_uuid(db, uuid=token_data.sub)
     if not user:
-        return None
+        ## The token was valid but the user does not exist anymore
+        ## TODO see if this still raises with auto_error set to false
+        raise HTTPException(status_code=404, detail="User not found")
     return user
 
 def get_current_user(
@@ -53,6 +55,7 @@ def get_current_user(
         )
         token_data = schemas.TokenPayload(**payload)
     except (jwt.JWTError, ValidationError) as e:
+        ##Not enough segments
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials",
