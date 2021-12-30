@@ -33,8 +33,8 @@ def init(kw_dict) -> None:
     vocabs = retrieve_data(dbx, '/vocabs.json')
     definitions = retrieve_data(dbx, '/definitions.json')
     users = retrieve_data(dbx, '/users.json')
-    questions = retrieve_data(dbx, '/questions.json')
     decks = retrieve_data(dbx, '/decks.json')
+    questions = retrieve_data(dbx, '/questions.json')
     populate_seed_data_objects(
         db,
         lemmas=lemmas,

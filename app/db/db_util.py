@@ -151,6 +151,17 @@ def populate_seed_data_objects(db: Session, lemmas, vocabs, definitions, users, 
         user_models.append(user_in)
     crud.user.batch_create(db, objs_in=user_models)
 
+    print('adding decks')
+    deck_models = []
+    for deck in decks:
+        deck_in = schemas.DeckDBDump(
+            uuid=deck['uuid'],
+            owner_uuid=deck['vocab_uuid'],
+            date_added=None if over_ride_dates else datetime.fromisoformat(deck['date_added']),
+        )
+        deck_models.append(deck_in)
+    crud.deck.batch_create(db, objs_in=deck_models)
+
     print('adding questions')
     question_models = []
     for question in questions:
@@ -167,14 +178,3 @@ def populate_seed_data_objects(db: Session, lemmas, vocabs, definitions, users, 
         )
         question_models.append(question_in)
     crud.question.batch_create(db, objs_in=question_models)
-
-    print('adding decks')
-    deck_models = []
-    for deck in decks:
-        deck_in = schemas.DeckDBDump(
-            uuid=deck['uuid'],
-            owner_uuid=deck['vocab_uuid'],
-            date_added=None if over_ride_dates else datetime.fromisoformat(deck['date_added']),
-        )
-        deck_models.append(deck_in)
-    crud.deck.batch_create(db, objs_in=deck_models)
