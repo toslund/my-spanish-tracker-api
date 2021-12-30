@@ -163,7 +163,6 @@ def create_deck(
         # TODO implement create_with_owner deck method
         # deck = crud.deck.create_with_owner(db=db, obj_in=deck_in, owner_uuid=current_user.uuid)
     elif settings.DECKS_OPEN_POST:
-        deck_in['owner_uuid'] = None
         # honey pot stuff for open POST
         if deck_in.email or deck_in.name != settings.OPEN_POST_KEY:
             raise HTTPException(status_code=400, detail="Bots bad")
