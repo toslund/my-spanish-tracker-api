@@ -156,7 +156,7 @@ def populate_seed_data_objects(db: Session, lemmas, vocabs, definitions, users, 
     for deck in decks:
         deck_in = schemas.DeckDBDump(
             uuid=deck['uuid'],
-            owner_uuid=deck['vocab_uuid'],
+            owner_uuid=deck['owner_uuid'],
             date_added=None if over_ride_dates else datetime.fromisoformat(deck['date_added']),
         )
         deck_models.append(deck_in)
