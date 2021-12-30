@@ -38,8 +38,6 @@ class Assessment:
             elif rank[0] not in self.blacklist:
                 bins[bin_index]['choose'].append(rank[0])
         printable_bins = [{'correct': bin['correct'], 'total': bin['total'], 'choose': len(bin['choose']), 'sample_size': bin['sample_size']} for bin in bins]
-        print('made bins')
-        print(printable_bins)
         return bins, printable_bins
 
     def get_questions(self):

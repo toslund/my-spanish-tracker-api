@@ -31,6 +31,7 @@ class QuestionCreate(QuestionBase):
     uuid: UUID
     deck_uuid: UUID
     vocab_uuid: UUID
+    owner_uuid: Optional[UUID]
     vocab: Optional[VocabSimplified]
     token: Optional[str]
 

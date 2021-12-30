@@ -121,7 +121,7 @@ def generate_deck_assessment(
     deck = crud.deck.get_by_uuid(db=db, uuid=uuid)
     ## Decks with owners should only be seen by owners and superusers
     if deck.owner_uuid:
-        if (not current_user and current_user.uuid != deck.owner_uuid) or (not current_user.is_superuser or current_user.uuid != deck.owner_uuid):
+        if (current_user and getattr(current_user, 'uuid', None) != deck.owner_uuid) or (not current_user.is_superuser or current_user.uuid != deck.owner_uuid):
             raise HTTPException(status_code=400, detail="Not enough permissions") 
     if not deck:
         raise HTTPException(status_code=404, detail="Deck not found")
@@ -206,6 +206,8 @@ def create_question_in_deck(
         verified_deck_uuid = UUID(payload.get('deck_uuid'))
     except TypeError as e:
         raise HTTPException(status_code=404, detail="Invalid request")
+    if current_user:
+        question_in.owner_uuid = current_user.uuid
     if verified_question_uuid != question_in.uuid or verified_vocab_uuid != question_in.vocab_uuid or verified_deck_uuid != question_in.deck_uuid:
         raise HTTPException(status_code=404, detail="Invalid request")
     question = crud.question.get_by_uuid(db=db, uuid=verified_question_uuid)
