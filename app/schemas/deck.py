@@ -22,7 +22,7 @@ class DeckSimplified(DeckBase):
 # Properties to receive on deck creation
 class DeckCreate(DeckBase):
     owner_uuid: Union[UUID, None]
-    # honeypot
+    # HONEYPOT
     name: str
     email: Optional[str]
 
@@ -54,4 +54,8 @@ class DeckInDB(DeckInDBBase):
     pass
 
 class DeckDBDump(DeckInDBBase):
-    pass
+    owner_uuid: Union[UUID, None]
+    date_added: Optional[datetime]
+    
+    class Config:
+        orm_mode = True

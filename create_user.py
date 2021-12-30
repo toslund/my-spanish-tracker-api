@@ -21,6 +21,7 @@ def main() -> None:
             for row in reader:
                 created, user = create_user(db, fullname=row['name'], email=row['email'], password=row['password'], uuid=uuid.uuid4())
                 print(f'created user: {user.email}' if created == True else f'user already exists: {user.email}')
-
+    else:
+        logger.info("CSV not supplied")
 if __name__ == "__main__":
     main()

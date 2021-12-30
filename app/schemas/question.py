@@ -65,7 +65,6 @@ class QuestionInDB(QuestionInDBBase):
     pass
 
 class QuestionDBDump(QuestionBase):
-    id: int
     uuid: UUID
     deck_uuid: UUID
     vocab_uuid: UUID
