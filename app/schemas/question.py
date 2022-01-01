@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from .vocab import Vocab, VocabSimplified
+from .vocab import Vocab, VocabBase, VocabSimplified
 
     
 # Shared properties
@@ -54,7 +54,7 @@ class QuestionInDBBase(QuestionBase):
 
 # Properties to return to client
 class Question(QuestionBase):
-    vocab: VocabSimplified
+    vocab: VocabBase
 
     class Config:
         orm_mode = True
