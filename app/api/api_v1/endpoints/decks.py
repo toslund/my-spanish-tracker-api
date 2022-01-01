@@ -53,7 +53,7 @@ def read_deck_by_uuid(
     if deck.owner_uuid == None:
         ## all anonymous decks are freely accessible
         pass
-    elif current_user.is_superuser:
+    elif current_user and current_user.is_superuser:
         pass
     elif current_user and current_user.uuid == deck.owner_uuid:
         pass
@@ -67,16 +67,11 @@ def read_deck_by_uuid(
     questions = []
     bins = []
     sorted_questions = sorted(deck.questions, key=lambda x:x.date_added)
-    print(len(questions))
     for question in sorted_questions:
         questions.append(question)
         current_assessment = Assessment(questions, all_ranks, generate_questions_queue=False)
         predictions.append(current_assessment.prediction)
         bins.append(current_assessment.bins)
-    print(type(predictions[0]))
-    print(predictions[0])
-    print(type(predictions[15]))
-    print(predictions[15])
     deck = schemas.Deck(
         uuid=deck.uuid,
         questions=deck.questions,
@@ -156,7 +151,7 @@ def generate_deck_assessment(
     if deck.owner_uuid == None:
         ## all anonymous decks are freely accessible
         pass
-    elif current_user.is_superuser:
+    elif current_user and current_user.is_superuser:
         pass
     elif current_user and current_user.uuid == deck.owner_uuid:
         pass
