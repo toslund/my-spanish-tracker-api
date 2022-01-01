@@ -144,9 +144,16 @@ def generate_deck_assessment(
     if not deck:
         raise HTTPException(status_code=404, detail="Deck not found")
     ## Decks with owners should only be seen by owners and superusers
-    if deck.owner_uuid:
-        if (current_user and getattr(current_user, 'uuid', None) != deck.owner_uuid) or (not current_user.is_superuser or current_user.uuid != deck.owner_uuid):
-            raise HTTPException(status_code=400, detail="Not enough permissions") 
+     #TODO upgrade to python 3.10 to use match statement
+    if deck.owner_uuid == None:
+        ## all anonymous decks are freely accessible
+        pass
+    elif current_user.is_superuser:
+        pass
+    elif current_user and current_user.uuid == deck.owner_uuid:
+        pass
+    else:
+        raise HTTPException(status_code=400, detail="Not enough permissions") 
     all_ranks = crud.vocab.get_ranks(db)
     deck_assessment = Assessment(deck.questions, all_ranks)
     assessment_payload = {
