@@ -13,22 +13,23 @@ class Assessment:
     # v1 = V1()
     # step_breaks_list = [(1, 50), (51, 500), (501, 1000),(1001, 2000),(2001, 3000),(3001, 4000),(4001, 5000),(5001, 6000),(6001, 7000),(7001, 8000),(8001, 9000),(9001, 10000)]
     bin_size = 1000
-    def __init__(self, questions: "list[Question]", ranks) -> None:
+    def __init__(self, questions: "list[Question]", ranks, generate_questions_queue=True) -> None:
         self.sample_rate = .01
         self.questions = {question.vocab.uuid: question for question in questions}
         self.ranks = ranks
-        self.bins, self.printable_bins = self.create_bins()
-        self.questions = self.get_questions()
+        self.high_rank = ranks[-1][1]
+        self.bins = self.create_bins()
+        self.questions_queue = self.get_questions() if generate_questions_queue else None
         self.prediction = self.assess()
         pass
 
     def get_sample_size(self, bin_index):
         first_num = bin_index*self.bin_size
-        second_num = min((bin_index+1)*self.bin_size, self.ranks[-1][1])
+        second_num = min((bin_index+1)*self.bin_size, self.high_rank)
         return math.floor((second_num - first_num + 1) * self.sample_rate)
     
     def create_bins(self):
-        bins =[{'correct': [], 'total': [], 'choose': [], 'sample_size': self.get_sample_size(n)} for n in range(math.ceil(self.ranks[-1][1]/1000))]
+        bins =[{'bottom_rank': (n*self.bin_size) + 1, 'top_rank': min(((n + 1)*self.bin_size), self.high_rank), 'correct': [], 'total': [], 'choose': [], 'sample_size': self.get_sample_size(n)} for n in range(math.ceil(self.high_rank/self.bin_size))]
         for rank in self.ranks:
             bin_index = math.ceil(rank[1]/1000) - 1
             if rank[0] in self.questions:
@@ -37,14 +38,28 @@ class Assessment:
                     bins[bin_index]['correct'].append(rank[0])
             elif rank[0] not in self.blacklist:
                 bins[bin_index]['choose'].append(rank[0])
-        printable_bins = [{'correct': bin['correct'], 'total': bin['total'], 'choose': len(bin['choose']), 'sample_size': bin['sample_size']} for bin in bins]
-        return bins, printable_bins
+        for bin in bins:
+            choose_n = bin['sample_size'] - len(bin['total'])
+            bin['choose'] = random.sample(bin['choose'], choose_n)
+        return bins
 
     def get_questions(self):
         question_vocab_uuids = []
+        numbers_chosen = []
         for bin in self.bins:
-            choose_n = bin['sample_size'] - len(bin['total'])
-            question_vocab_uuids.extend(random.sample(bin['choose'], choose_n))
+            numbers_chosen.append(len(bin['total']))
+        choosing = True
+        while choosing:
+            least_questions_val = min(numbers_chosen)
+            least_questions_bins = [index for index, element in enumerate(numbers_chosen) if element == least_questions_val]
+            choose_from_bins = [bin_idx for bin_idx in least_questions_bins if len(self.bins[bin_idx]['choose']) > 0]
+            if len(choose_from_bins) == 0:
+                choosing = False
+            ### only used so questions dont keep cycling easy-medium-hard...easy-medium-hard...easy-medium-hard
+            random.shuffle(choose_from_bins)
+            for bin_idx in choose_from_bins:
+                question_vocab_uuids.append(self.bins[bin_idx]['choose'].pop())
+                numbers_chosen[bin_idx] += 1
         return question_vocab_uuids
 
     def assess(self):
