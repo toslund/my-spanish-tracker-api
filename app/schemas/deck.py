@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from pydantic.networks import EmailStr
 
 from .question import Question
+from .user import User
     
 # Shared properties
 class DeckBase(BaseModel):
@@ -42,7 +43,10 @@ class DeckInDBBase(DeckBase):
 # Properties to return to client
 class Deck(DeckBase):
     questions: List[Question]
+    predictions: Optional[List[dict]]
+    assessment_bins: Optional[List[dict]]
     owner_uuid: Optional[UUID]
+    owner: Optional[User]
     date_added: Optional[datetime]
 
     class Config:

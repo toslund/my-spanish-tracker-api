@@ -11,6 +11,7 @@ from app.api import deps
 from app.api.api_v1.endpoints import lemmas
 from app.core.config import settings
 from app.core import security
+from app.schemas import assessment
 from app.services.prediction_service import Assessment
 
 
@@ -35,7 +36,7 @@ def read_decks(
         )
     return decks
 
-@router.get("/{uuid}", response_model=schemas.DeckSimplified)
+@router.get("/{uuid}", response_model=schemas.Deck)
 def read_deck_by_uuid(
     *,
     db: Session = Depends(deps.get_db),
@@ -55,6 +56,27 @@ def read_deck_by_uuid(
         raise HTTPException(status_code=404, detail="Deck not found")
     # if not crud.user.is_superuser(current_user) and (deck.owner_uuid != current_user.uuid):
     #     raise HTTPException(status_code=400, detail="Not enough permissions")
+
+    all_ranks = crud.vocab.get_ranks(db)
+    predictions = []
+    questions = []
+    assessment_bins = []
+    for question in deck.questions:
+        questions.append(question)
+        current_assessment = Assessment(questions, all_ranks, generate_questions_queue=False)
+        predictions.append(current_assessment.prediction)
+        assessment_bins.append(current_assessment.bins)
+    print(type(predictions[0]))
+    print(predictions[0])
+    print(type(predictions[15]))
+    print(predictions[15])
+    deck = schemas.Deck(
+        uuid=deck.uuid,
+        questions=deck.questions,
+        predictions=predictions,
+        owner=deck.owner,
+        date_added=deck.date_added,
+    )
     return deck
 
 # @router.get("/question", response_model=List[schemas.Deck])
@@ -129,8 +151,9 @@ def generate_deck_assessment(
     deck_assessment = Assessment(deck.questions, all_ranks)
     assessment_payload = {
         'deck_uuid': deck.uuid,
-        'bins': deck_assessment.printable_bins,
+        'bins': deck_assessment.bins,
         'questions': deck_assessment.questions,
+        'questions_queue': deck_assessment.questions_queue,
         'prediction': deck_assessment.prediction
     }
     # assessment_payload = schemas.AssessmentPayload(
