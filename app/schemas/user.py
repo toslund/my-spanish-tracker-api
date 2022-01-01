@@ -3,7 +3,6 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
 from uuid import UUID
-from .deck import Deck
 
 
 # Shared properties
@@ -42,7 +41,6 @@ class UserInDBBase(UserBase):
 # Additional properties to return via API
 class User(UserBase):
     uuid: UUID
-    decks: List[Deck]
 
     class Config:
         orm_mode = True
