@@ -49,11 +49,16 @@ def read_deck_by_uuid(
     """
     deck = crud.deck.get_by_uuid(db=db, uuid=uuid)
     ## Decks with owners should only be seen by owners and superusers
-    if deck.owner_uuid:
-        if (not current_user and current_user.uuid != deck.owner_uuid) or (not current_user.is_superuser or current_user.uuid != deck.owner_uuid):
-            raise HTTPException(status_code=400, detail="Not enough permissions")  
-    if not deck:
-        raise HTTPException(status_code=404, detail="Deck not found")
+     #TODO upgrade to python 3.10 to use match statement
+    if deck.owner_uuid == None:
+        ## all anonymous decks are freely accessible
+        pass
+    elif current_user.is_superuser:
+        pass
+    elif current_user and current_user.uuid == deck.owner_uuid:
+        pass
+    else:
+        raise HTTPException(status_code=400, detail="Not enough permissions")
     # if not crud.user.is_superuser(current_user) and (deck.owner_uuid != current_user.uuid):
     #     raise HTTPException(status_code=400, detail="Not enough permissions")
 
