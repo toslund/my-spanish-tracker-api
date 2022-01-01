@@ -44,7 +44,7 @@ class DeckInDBBase(DeckBase):
 class Deck(DeckBase):
     questions: List[Question]
     predictions: Optional[List[dict]]
-    assessment_bins: Optional[List[dict]]
+    bins: Optional[List[List]]
     owner_uuid: Optional[UUID]
     owner: Optional[User]
     date_added: Optional[datetime]

@@ -65,12 +65,14 @@ def read_deck_by_uuid(
     all_ranks = crud.vocab.get_ranks(db)
     predictions = []
     questions = []
-    assessment_bins = []
-    for question in deck.questions:
+    bins = []
+    sorted_questions = sorted(deck.questions, key=lambda x:x.date_added)
+    print(len(questions))
+    for question in sorted_questions:
         questions.append(question)
         current_assessment = Assessment(questions, all_ranks, generate_questions_queue=False)
         predictions.append(current_assessment.prediction)
-        assessment_bins.append(current_assessment.bins)
+        bins.append(current_assessment.bins)
     print(type(predictions[0]))
     print(predictions[0])
     print(type(predictions[15]))
@@ -79,6 +81,7 @@ def read_deck_by_uuid(
         uuid=deck.uuid,
         questions=deck.questions,
         predictions=predictions,
+        bins=bins,
         owner=deck.owner,
         date_added=deck.date_added,
     )

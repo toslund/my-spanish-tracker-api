@@ -19,6 +19,7 @@ class Assessment:
         self.ranks = ranks
         self.high_rank = ranks[-1][1]
         self.bins = self.create_bins()
+        print(f'generate_questions_queue: {generate_questions_queue}')
         self.questions_queue = self.get_questions() if generate_questions_queue else None
         self.prediction = self.assess()
         pass
@@ -53,6 +54,7 @@ class Assessment:
             least_questions_val = min(numbers_chosen)
             least_questions_bins = [index for index, element in enumerate(numbers_chosen) if element == least_questions_val]
             choose_from_bins = [bin_idx for bin_idx in least_questions_bins if len(self.bins[bin_idx]['choose']) > 0]
+            print(choose_from_bins)
             if len(choose_from_bins) == 0:
                 choosing = False
             ### only used so questions dont keep cycling easy-medium-hard...easy-medium-hard...easy-medium-hard
@@ -74,7 +76,7 @@ class Assessment:
             assessment['total_questioned'] += len(bin['total'])
             assessment['total_correct'] += len(bin['correct'])
 
-            if len(bin['total']) != 0 and assessment['total_predicted_correct'] != None:
+            if len(bin['total']) > 0 and assessment['total_predicted_correct'] != None:
                 percentage_correct = len(bin['correct'])/len(bin['total'])
                 predicted_correct = math.ceil(percentage_correct*self.bin_size)
                 assessment['total_predicted_correct'] += predicted_correct
