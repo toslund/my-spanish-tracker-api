@@ -271,20 +271,24 @@ def create_question_in_deck(
 #     deck = crud.deck.update(db=db, db_obj=deck, obj_in=deck_in)
 #     return deck
 
-@router.delete("/{id}", response_model=schemas.Deck)
+@router.delete("/{uuid}", response_model=schemas.Deck)
 def delete_deck(
     *,
     db: Session = Depends(deps.get_db),
-    id: int,
-    current_user: models.User = Depends(deps.get_current_active_user),
+    uuid: UUID,
+    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     Delete an deck.
     """
-    deck = crud.deck.get(db=db, id=id)
+    deck = crud.deck.get_by_uuid(db=db, uuid=uuid)
     if not deck:
         raise HTTPException(status_code=404, detail="Deck not found")
-    if not crud.user.is_superuser(current_user) and (deck.owner_uuid != current_user.uuid):
+    if current_user.is_superuser:
+        pass
+    elif deck.owner_uuid and deck.owner_uuid == current_user.uuid:
+        pass
+    else:
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    deck = crud.deck.remove(db=db, id=id)
+    deck = crud.deck.remove(db=db, uuid=uuid)
     return deck
