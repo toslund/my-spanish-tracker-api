@@ -21,7 +21,7 @@ class Deck(Base):
     owner_uuid = Column(UUID(as_uuid=True), ForeignKey("user.uuid"))
     owner = relationship("User", back_populates="decks")
 
-    questions = relationship("Question", back_populates="deck")
+    questions = relationship("Question", back_populates="deck", cascade="all, delete")
     
 
     
