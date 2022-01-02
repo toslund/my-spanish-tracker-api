@@ -29,9 +29,10 @@ class Assessment:
         return math.floor((second_num - first_num + 1) * self.sample_rate)
     
     def create_bins(self):
-        bins =[{'bottom_rank': (n*self.bin_size) + 1, 'top_rank': min(((n + 1)*self.bin_size), self.high_rank), 'correct': [], 'total': [], 'choose': [], 'sample_size': self.get_sample_size(n)} for n in range(math.ceil(self.high_rank/self.bin_size))]
+        bins =[{'number_in_bin': 0, 'bottom_rank': (n*self.bin_size) + 1, 'top_rank': min(((n + 1)*self.bin_size), self.high_rank), 'correct': [], 'total': [], 'choose': [], 'sample_size': self.get_sample_size(n)} for n in range(math.ceil(self.high_rank/self.bin_size))]
         for rank in self.ranks:
             bin_index = math.ceil(rank[1]/1000) - 1
+            bins[bin_index]['number_in_bin'] += 1
             if rank[0] in self.questions:
                 bins[bin_index]['total'].append(rank[0])
                 if self.questions[rank[0]].correct:
@@ -76,7 +77,7 @@ class Assessment:
 
             if len(bin['total']) > 0 and assessment['total_predicted_correct'] != None:
                 percentage_correct = len(bin['correct'])/len(bin['total'])
-                predicted_correct = math.ceil(percentage_correct*self.bin_size)
+                predicted_correct = math.ceil(percentage_correct*bin['number_in_bin'])
                 assessment['total_predicted_correct'] += predicted_correct
             else:
                 assessment['total_predicted_correct'] = None
