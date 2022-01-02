@@ -65,15 +65,18 @@ def read_deck_by_uuid(
     all_ranks = crud.vocab.get_ranks(db)
     predictions = []
     questions = []
+    bins=None
     sorted_questions = sorted(deck.questions, key=lambda x:x.date_added)
     for question in sorted_questions:
         questions.append(question)
         current_assessment = Assessment(questions, all_ranks, generate_questions_queue=False)
         predictions.append(current_assessment.prediction)
+        bins=current_assessment.bins
     deck = schemas.Deck(
         uuid=deck.uuid,
         questions=deck.questions,
         predictions=predictions,
+        bins=bins,
         owner=deck.owner,
         date_added=deck.date_added,
     )

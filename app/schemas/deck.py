@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Any
 from datetime import datetime
 from uuid import UUID
 
@@ -44,7 +44,7 @@ class DeckInDBBase(DeckBase):
 class Deck(DeckBase):
     questions: List[Question]
     predictions: Optional[List[dict]]
-    bins: Optional[List[List]]
+    bins: Optional[List[Any]]
     owner_uuid: Optional[UUID]
     owner: Optional[User]
     date_added: Optional[datetime]
