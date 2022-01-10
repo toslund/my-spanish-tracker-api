@@ -4,6 +4,7 @@ set_heroku_vars.sh
 set_dev_vars.sh
 
 # Dev stuff
+*.sh
 *.db
 *.private
 json_data
