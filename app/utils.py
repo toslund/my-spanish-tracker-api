@@ -8,8 +8,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-import emails
-from emails.template import JinjaTemplate
 from jose import jwt
 
 from app.core.config import settings
