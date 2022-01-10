@@ -15,8 +15,8 @@ class Settings(BaseSettings):
     #
     PROJECT_NAME: str = "TrackMySpanish"
     API_V1_STR: str = "/api/v1"
-    USERS_OPEN_REGISTRATION: bool = True
-    DECKS_OPEN_POST: bool = True
+    USERS_OPEN_REGISTRATION: bool = os.getenv('USERS_OPEN_REGISTRATION', False) == 'true'
+    DECKS_OPEN_POST: bool = os.getenv('DECKS_OPEN_POST', False) == 'true'
     OPEN_POST_KEY = os.getenv('OPEN_POST_KEY', secrets.token_urlsafe(32))
 
     #
