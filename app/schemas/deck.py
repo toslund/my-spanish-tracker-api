@@ -11,14 +11,14 @@ from .user import User
     
 # Shared properties
 class DeckBase(BaseModel):
-    uuid: UUID    
+    uuid: UUID
+
+    class Config:
+        orm_mode = True  
 
 # Shared properties
 class DeckSimplified(DeckBase):
-
-    class Config:
-        orm_mode = True
-
+    date_added: Optional[datetime]
 
 # Properties to receive on deck creation
 class DeckCreate(DeckBase):

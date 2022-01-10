@@ -6,6 +6,6 @@ from.lemma import Lemma, LemmaSimplified, LemmaCreate, LemmaInDB, LemmaDBDump
 from.vocab import VocabBase, Vocab, VocabSimplified, VocabDefs, VocabCreate, VocabInDB, VocabDBDump
 from.definition import Definition, DefinitionSimplified, DefinitionCreate, DefinitionInDB, DefinitionDBDump
 from.question import Question, QuestionCreate, QuestionProvisionalCreate, QuestionInDB, QuestionDBDump
-from.deck import Deck, DeckSimplified, DeckCreate, DeckInDB, DeckDBDump
-from .assessment import AssessmentPayload
+from.deck import DeckBase, Deck, DeckSimplified, DeckCreate, DeckInDB, DeckDBDump
+from .assessment import AssessmentBase
 from .vocab_by_lemma import LemmaWithVocab

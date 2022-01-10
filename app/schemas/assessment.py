@@ -6,13 +6,7 @@ from pydantic import BaseModel
 from .question import Question
 
 
-class AssessmentPayload(BaseModel):
+class AssessmentBase(BaseModel):
     deck_uuid: UUID
-    ranks: List[int]
-    deficient: bool
-    grouped_correct: Any
-    deficient_groups: Any
-    grouped_ranks: Any
-    prediction: Optional[float]
-    total_questions_to_go: int
-    total_questions: int
+    bins: List[Any]
+    questions_queue: List[Any]

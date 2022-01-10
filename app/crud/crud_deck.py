@@ -50,16 +50,18 @@ class CRUDDeck(CRUDBase[Deck, DeckCreate, DeckCreate]):
     #     db.refresh(db_obj)
     #     return db_obj
 
-    # def get_multi_by_owner(
-    #     self, db: Session, *, owner_uuid: int, skip: int = 0, limit: int = 100
-    # ) -> List[Item]:
-    #     return (
-    #         db.query(self.model)
-    #         .filter(Item.owner_uuid == owner_uuid)
-    #         .offset(skip)
-    #         .limit(limit)
-    #         .all()
-    #     )
+    def get_multi_by_owner(
+        self, db: Session, *, owner_uuid: int, skip: int = 0, limit: int = 100
+    ) -> List[Deck]:
+        return (
+            db.query(self.model)
+            .filter(Deck.owner_uuid == owner_uuid)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+        
 
 
 deck = CRUDDeck(Deck)

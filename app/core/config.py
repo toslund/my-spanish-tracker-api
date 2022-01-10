@@ -13,9 +13,9 @@ class Settings(BaseSettings):
     #
     ## GENERAL
     #
-    PROJECT_NAME: str = "spanish-vocab"
+    PROJECT_NAME: str = "TrackMySpanish"
     API_V1_STR: str = "/api/v1"
-    USERS_OPEN_REGISTRATION: bool = False
+    USERS_OPEN_REGISTRATION: bool = True
     DECKS_OPEN_POST: bool = True
     OPEN_POST_KEY = os.getenv('OPEN_POST_KEY', secrets.token_urlsafe(32))
 
@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     ## SERVER
     #
     # SERVER_NAME: str = www.example.com
-    # SERVER_HOST: AnyHttpUrl
+    SERVER_HOST: str = os.getenv('SERVER_HOST')
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \
     # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
@@ -56,7 +56,9 @@ class Settings(BaseSettings):
     #
     # SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') if not os.getenv('DEV_MODE', 'false').lower() == 'true' else os.getenv('DATABASE_URL')
     # Hack to fix url supplied by heroku
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '').replace("postgres://", "postgresql://", 1) if not os.getenv('DEV_MODE', 'false').lower() == 'true' else os.getenv('DATABASE_URL')
+    DEV_MODE = os.getenv('DEV_MODE', 'false').lower() == 'true'
+    PRODUCTION_MODE = not DEV_MODE
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '').replace("postgres://", "postgresql://", 1) if PRODUCTION_MODE else os.getenv('DATABASE_URL')
     #For manual setup
     # POSTGRES_SERVER: Optional[str] = None
     # POSTGRES_USER: Optional[str] = None
@@ -93,7 +95,8 @@ class Settings(BaseSettings):
     EMAILS_FROM_NAME: Optional[str] = None
 
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
-    EMAIL_TEMPLATES_DIR: str = "/app/app/email-templates/build"
+    EMAIL_VERIFY_TOKEN_EXPIRE_HOURS: int = 48
+    EMAIL_TEMPLATES_DIR: str = "./app/templates"
     EMAILS_ENABLED: bool = False
 
     @validator("EMAILS_ENABLED", pre=True)

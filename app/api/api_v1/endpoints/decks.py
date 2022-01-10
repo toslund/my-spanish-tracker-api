@@ -190,10 +190,8 @@ def create_deck(
     """
     Create new deck.
     """
-    if current_user:
-        if (deck_in.owner_uuid != current_user.uuid) and not current_user.is_superuser:
-            raise HTTPException(status_code=422, detail="Owner does not match current authenticated user.")
-        # TODO implement create_with_owner deck method
+    if deck_in.owner_uuid is None:
+        raise HTTPException(status_code=422, detail="Invalid owner.")
         # deck = crud.deck.create_with_owner(db=db, obj_in=deck_in, owner_uuid=current_user.uuid)
     elif settings.DECKS_OPEN_POST:
         # honey pot stuff for open POST
